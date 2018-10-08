@@ -33,7 +33,7 @@ class SeparateChainingHash:
         b = 4993
         return hash((((a*key)+b)% p)% self.size)
     
-    def wichHash(self,key):
+    def whichHash(self,key):
         
         if(self.hashToUse == 1):
             return self.hashDivision(key)
@@ -42,17 +42,17 @@ class SeparateChainingHash:
         elif(self.hashToUse == 3):
             return self.hashUniversalInt(key)
  
-
+    #creo que hay que checar la funcion rehash que no esta encadenando >_<
     def reHash(self, entry, key, value):
-        while entry and entry.key != key:
+        while entry.next != None:
             prev, entry = entry, entry.next
         if(entry):
-            entry.value = value
-        else:
-            prev.next = HashData(key, value)
+            entry.next = HashData(key, value)
+        #else:
+            #prev.next= HashData(key, value)
 
     def set(self, key, value):
-        slot = self.wichHash(key)
+        slot = self.whichHash(key)
         entry = self.table[slot]
         if(not entry):
             self.table[slot] = HashData(key, value)
@@ -60,21 +60,26 @@ class SeparateChainingHash:
             self.reHash(entry,key, value)
 
     def get(self, key):
-        hash = self.wichHash(key)
+        hash = self.whichHash(key)
         if(not self.table[hash]):
             raise KeyError
         else:
             entry = self.table[hash]
-            while(entry and entry.key != key):
-                entry = entry.next
-            return entry.value
-        
+            #while(entry and entry.key != key):
+                #entry = entry.next
+            return entry
 
     
 test1 = SeparateChainingHash(100,1)
+
+test1.set(666,15)
+
+test1.set(666,26)
     
-for i in range(100):
-    key = random.randint(0,999)
-    value = random.randint(0,999)
-    test1.set(key,value)
-    print(key)
+#for i in range(100):
+#    key = random.randint(0,999)
+#    value = random.randint(0,999)
+#    test1.set(key,value)
+
+chain = test1.get(666)
+print(chain)
